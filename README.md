@@ -2,7 +2,7 @@
 
 ## About this repository:
 
-Text and network analysis on twitter hashtags about human-machine interaction. 
+Text and network analysis to study on human-technology interaction using twitter data. 
 
 # Structure of repo
 
