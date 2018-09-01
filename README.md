@@ -9,3 +9,6 @@ Text and network analysis to study on human-technology interaction using twitter
 - <code>data</code>: data used or generated
 
 - <code>references</code>: related codes or papers found online
+
+# References
+https://www.machinelearningplus.com/nlp/topic-modeling-gensim-python/
