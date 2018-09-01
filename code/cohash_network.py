@@ -4,75 +4,111 @@ import pandas as pd
 import networkx as nx 
 import sys
 import heapq
+import itertools
 
-PATH = '../data/'
 
-def make_graph(file, minf, top, english=True):
+
+def find_top_k(nodes, k):
+	'''
+	get a list of nodes with top frequency
+	'''
+
+	node_list = list(nodes.items())
+	h = [(count,n) for (n,count) in node_list[:k]]
+	heapq.heapify(h)
+
+	for n, count in node_list[k:]:
+		min_count, min_n = h[0]
+
+		if count > min_count:
+			heapq.heapreplace(h, (count, n))
+
+	h.sort(reverse=True)
+	rv = [n[1] for n in h]
+
+	return rv
+
+
+def find_min_f(nodes, f):
+	'''
+	get a list of nodes with least frequency
+	'''
+
+	rv = [node for node in nodes if nodes[node] >= f]
+
+	return rv
+
+
+def get_node_list(nodes, minf=0, top=None):
+
+
+	if minf > 0:
+		node_list = find_min_f(nodes, minf)
+	elif top != None:
+		node_list = find_top_k(nodes, top)
+	else:
+		node_list = list(nodes.keys())
+
+	return node_list
+
+
+def make_graph(file, minf=0, top=None):
 	'''
 	df is the whole data file
 	'''
 
 	df = pd.read_csv(file)
-	if english:
-		hashtag = df[df['lang'] == 'en']['hashtags']
-	else:
-		hashtag = df.hashtags
-
-	G = nx.Graph()
-
+	hashtag = df[df['lang'] == 'en']['hashtags']
 	hashtag = hashtag[~hashtag.isnull()]
+
 	edges = {}
 	nodes = {}
+
 	for cell in hashtag:
 		node_list = cell.split('; ')
-		if len(node_list) > 1:
-
-
-			for edge in edge_list:
-				edges[edge] = edges.get(edge, 0) + 1
-		else:
-			node = node_list[0]
+		for node in node_list:
 			nodes[node] = nodes.get(node, 0) + 1
 
 
-	edge_list = [(*x, edges[x]) for x in edges.keys()]
+	# it's impossible that both minf > 0 and top != None
+	node_list = get_node_list(nodes, minf, top)
 
+	for cell in hashtag:
+		nodes = cell.split('; ')
+		if len(nodes) > 1:
+			for node in nodes:
+				if not node in node_list:
+					nodes.remove(node)
+			edge_list = list(itertools.combinations(nodes, 2))
+			for edge in edge_list:
+		 		edges[edge] = edges.get(edge, 0) + 1
+
+
+	edge_list = [pair for pair in edges if (pair[0] in node_list) and (pair[1] in node_list)]
+
+	pairs = list(edges.keys())
+	for pair in pairs:
+		if not pair in edge_list:
+			del edges[pair]
+
+	edge_list = [(*x, edges[x]) for x in edges.keys()]
+	G = nx.Graph()
 	G.add_weighted_edges_from(edge_list)
 
 	return G
 
 
-def get_top_node(top, node_dic):
 
-    node_counts = list(node_dic.items())
+def main():
 
-    h = [(count,n) for (n,count) in node_counts[:top]]
-    heapq.heapify(h)
-
-    for n, count in node_counts[top:]:
-        min_count, min_n = h[0]
-
-        if count > min_count:
-            heapq.heapreplace(h, (count, n))
-
-    h.sort(reverse=True)
-
-    return h
-
-
+	ipfile, opfile = sys.argv[1:]
+	G = make_graph(ipfile, english)
+	nx.write_gexf(G, opfile)
 
 
 if __name__ == '__main__':
 
-	english, ipfile, opfile = sys.argv[1:]
-
-	english = eval(english)
-	ipfile = PATH + ipfile
-	opfile = PATH + opfile
-
-	G = make_graph(ipfile, english)
-
-	nx.write_gexf(G, opfile)
+	main()
 
 
 
