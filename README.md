@@ -6,7 +6,7 @@ Text and network analysis to study human-technology interaction using twitter da
 
 - <code>code</code>: all the .py files or ipython notebook I wrote or used
   
-- <code>data</code>: data used or generated
+- <code>data</code>: data downloaded or generated
 
 - <code>references</code>: related codes or papers found online
 
