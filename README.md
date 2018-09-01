@@ -2,7 +2,7 @@
 
 Text and network analysis to study on human-technology interaction using twitter data. 
 
-# Structure of repo
+### Structure of repo
 
 - <code>code</code>: all the .py files or ipython notebook I wrote or used
   
@@ -10,5 +10,5 @@ Text and network analysis to study on human-technology interaction using twitter
 
 - <code>references</code>: related codes or papers found online
 
-# References
+### References
 https://www.machinelearningplus.com/nlp/topic-modeling-gensim-python/
