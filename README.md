@@ -1,7 +1,5 @@
 # Siri_HeyGoogle_Cortana_Alexa
 
-## About this repository:
-
 Text and network analysis to study on human-technology interaction using twitter data. 
 
 # Structure of repo
