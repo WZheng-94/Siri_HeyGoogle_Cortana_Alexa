@@ -10,7 +10,7 @@ def clean_text(df):
 
 	regex_1 = re.compile(r'((RT )?@\w+: )', re.IGNORECASE)
 	regex_2 = re.compile(r'(https?[://\w\.\-\/]+)', re.IGNORECASE)
-	regex_3 = re.compile(r'(@\w+ )', re.IGNORECASE)
+	# regex_3 = re.compile(r'(@\w+ )', re.IGNORECASE)
 	rv = df.apply(lambda x:regex_1.sub('',x))
 	rv = rv.apply(lambda x:regex_2.sub('',x))
 

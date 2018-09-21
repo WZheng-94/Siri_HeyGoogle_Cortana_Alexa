@@ -11,9 +11,10 @@ def extract_tweet(df, targets):
 	for ind, row in df.iterrows():
 		try:
 			hashtags = row['hashtags'].split('; ')
-			for hashtag in targets:
+			hashtags = [x.lower() for x in hashtags]
+			for hashtag in hashtags:
 				if hashtag in targets:
-					rv.append(row['text'])
+					rv.append(row)
 					break
 		except:
 			continue
@@ -30,10 +31,14 @@ def main():
 
 	rv = extract_tweet(df, targets)
 
-	with open(opfile, 'w') as f:
-		writer = csv.writer(f, lineterminator='\n')
-		for val in rv:
-			writer.writerow([val])
+	rv = pd.DataFrame(rv)
+
+	rv.to_csv(opfile, index=False)
+
+	# with open(opfile, 'w') as f:
+	# 	writer = csv.writer(f, lineterminator='\n')
+	# 	for val in rv:
+	# 		writer.writerow([val])
 
 if __name__ == '__main__':
 	main()

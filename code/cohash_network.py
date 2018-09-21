@@ -1,10 +1,14 @@
-# python cohash_network.py True ipfile opfile
+# python cohash_network.py minf top ipfile opfile
+# purpose: create co-hashtag network, minf: minimum frequency
+#          top: top nodes
+
 
 import pandas as pd 
 import networkx as nx 
 import sys
 import heapq
 import itertools
+
 
 
 
@@ -66,6 +70,7 @@ def make_graph(file, minf=0, top=None):
 
 	for cell in hashtag:
 		node_list = cell.split('; ')
+		node_list = list(set([node.lower() for node in node_list]))
 		for node in node_list:
 			nodes[node] = nodes.get(node, 0) + 1
 
@@ -75,6 +80,7 @@ def make_graph(file, minf=0, top=None):
 
 	for cell in hashtag:
 		nodes = cell.split('; ')
+		nodes = list(set([node.lower() for node in nodes]))
 		if len(nodes) > 1:
 			for node in nodes:
 				if not node in node_list:
@@ -101,8 +107,8 @@ def make_graph(file, minf=0, top=None):
 
 def main():
 
-	ipfile, opfile = sys.argv[1:]
-	G = make_graph(ipfile, english)
+	minf, top, ipfile, opfile = sys.argv[1:]
+	G = make_graph(ipfile, int(minf), int(top))
 	nx.write_gexf(G, opfile)
 
 
