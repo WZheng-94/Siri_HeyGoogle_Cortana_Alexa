@@ -5,21 +5,27 @@ import pandas as pd
 import sys
 import csv
 
-def extract_tweet(df, targets):
+
+def extract_tweet(df, targets, union=True):
 
 	rv = []
 	for ind, row in df.iterrows():
 		try:
 			hashtags = row['hashtags'].split('; ')
 			hashtags = [x.lower() for x in hashtags]
-			for hashtag in hashtags:
-				if hashtag in targets:
+			if union:
+				for hashtag in hashtags:
+					if hashtag in targets:
+						rv.append(row)
+						break
+			else:
+				if set(hashtags).issuperset(set(targets)):
 					rv.append(row)
-					break
 		except:
 			continue
 
 	return rv
+
 
 def main():
 
